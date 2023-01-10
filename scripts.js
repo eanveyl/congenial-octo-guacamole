@@ -1,9 +1,7 @@
 d3.csv("clean_data.csv").then( function(data) {
-  // TODO Do stuff here
   console.log(data)
 
   midyear_data = data.slice(57, 111)
-
 
   const gdp_list = new Array();
   const country_list = new Array();
@@ -17,12 +15,13 @@ d3.csv("clean_data.csv").then( function(data) {
     country_names_list.push(midyear_data[i]["name"])
   }
 
+  // World Map
   var data = [{
     type: "choropleth", 
     locationmode: "country names", 
     locations: country_names_list,
     z: bigmac_price_list,
-    text: country_names_list,
+    text: bigmac_price_list,
     autocolorscale: true
   }];
 
