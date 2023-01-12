@@ -26,18 +26,23 @@ function linearRegression(inputArray, xLabel, yLabel) {
   return (x) => intercept + slope * x;
 }
 
+var dataset;
 
-d3.csv("clean_data_euromod.csv").then( function(data) {
-  console.log(data)
+d3.csv("clean_data_euromod.csv", (d) => {
+  dataset = d;
+  start();
+});
 
-  midyear_data = data.slice(57, 129)  // TODO this is not the most flexible way to fetch the data
+async function start() {
+
+  midyear_data = dataset.slice(57, 129);  // TODO this is not the most flexible way to fetch the data
 
   const gdp_list = new Array();
   const country_list = new Array();
   const bigmac_price_list = new Array();
   const country_names_list = new Array();
 
-  for (let i=0; i<midyear_data.length; i++){
+  for (let i = 0; i < midyear_data.length; i++) {
     gdp_list.push(parseFloat(midyear_data[i]["GDP_dollar"]))
     country_list.push(midyear_data[i]["iso_a3"])
     bigmac_price_list.push(parseFloat(midyear_data[i]["dollar_price"]))
@@ -47,8 +52,8 @@ d3.csv("clean_data_euromod.csv").then( function(data) {
   // World Map
   // Inspiration from https://plotly.com/javascript/choropleth-maps/
   var data = [{
-    type: "choropleth", 
-    locationmode: "country names", 
+    type: "choropleth",
+    locationmode: "country names",
     locations: country_names_list,
     z: bigmac_price_list,
     text: bigmac_price_list,
@@ -64,14 +69,14 @@ d3.csv("clean_data_euromod.csv").then( function(data) {
     }
   };
 
-  Plotly.newPlot("world_map", data, layout, {showLink: false});
+  Plotly.newPlot("world_map", data, layout, { showLink: false });
 
   // Scatter Plot
   // Inspiration from https://plotly.com/javascript/line-and-scatter/
   lin_reg_array = new Array();
-  
-  for (let i=0; i<gdp_list.length; i++) {
-    lin_reg_array.push({"GDP": gdp_list[i], "Price": bigmac_price_list[i]})
+
+  for (let i = 0; i < gdp_list.length; i++) {
+    lin_reg_array.push({ "GDP": gdp_list[i], "Price": bigmac_price_list[i] })
   }
 
   const linReg = linearRegression(lin_reg_array, "GDP", "Price")  // This is a function handle that takes a GDP value and returns the expected linear regression of the price in USD
@@ -92,23 +97,23 @@ d3.csv("clean_data_euromod.csv").then( function(data) {
     text: country_list,
     textposition: 'top center',
     textfont: {
-      family:  'Raleway, sans-serif'
+      family: 'Raleway, sans-serif'
     },
     marker: { size: 8 }
   };
-  
+
   var trace2 = {
     x: [min_gdp, max_gdp],
     y: linreg_vals,
     mode: "lines+markers",
     type: "scatter",
     name: "Linear Regression",
-    line: {shape: "linear"}
+    line: { shape: "linear" }
   }
   var data = [trace1, trace2];
-  
+
   var layout = {
-    title:'GDP vs Price',
+    title: 'GDP vs Price',
     xaxis: {
       title: "2022 GDP for Countries [USD]"
     },
@@ -116,7 +121,6 @@ d3.csv("clean_data_euromod.csv").then( function(data) {
       title: "BigMac Price [USD]"
     }
   };
-  
+
   Plotly.newPlot('scatter_plot', data, layout);
-  
-})
+}
