@@ -29,18 +29,18 @@ function linearRegression(inputArray, xLabel, yLabel) {
 function generateDescriptionText(gdp_list, country_list, bigmac_price_list, country_names_list) {
   var descriptions = new Array();
   const lin_reg_array = new Array();
-  
-  for (let i=0; i<gdp_list.length; i++) {
-    lin_reg_array.push({"GDP": gdp_list[i], "Price": bigmac_price_list[i]});
+
+  for (let i = 0; i < gdp_list.length; i++) {
+    lin_reg_array.push({ "GDP": gdp_list[i], "Price": bigmac_price_list[i] });
   }
   const linReg = linearRegression(lin_reg_array, "GDP", "Price");
 
-  for (let i=0; i<country_list.length; i++) {
+  for (let i = 0; i < country_list.length; i++) {
     expected_price = linReg(gdp_list[i]);
-    var rel_cost = (bigmac_price_list[i]/expected_price -1) * 100 ;  // In order to know i.e. 60% more expensive than other similar countries
+    var rel_cost = (bigmac_price_list[i] / expected_price - 1) * 100;  // In order to know i.e. 60% more expensive than other similar countries
     var rel_cost = rel_cost.toFixed(1)  // Round to the nearest tenth
     var s = String();
-    
+
     if (expected_price < bigmac_price_list[i]) {
       s = rel_cost + "% more expensive.";
     } else {
@@ -48,12 +48,12 @@ function generateDescriptionText(gdp_list, country_list, bigmac_price_list, coun
     }
 
 
-    var description = "Selected Country: " + country_names_list[i] + 
-    ". Compared to other countries \nwith similar GDP, goods are\n" + s
+    var description = "Selected Country: " + country_names_list[i] +
+      ". Compared to other countries \nwith similar GDP, goods are\n" + s
 
     descriptions.push(description);
   }
-  
+
   return descriptions
 }
 
@@ -93,7 +93,7 @@ async function draw() {
       projection: {
         type: "robinson"
       }
-    }, 
+    },
     height: 700
   };
 
@@ -140,22 +140,22 @@ async function draw() {
   }
 
   var trace3 = {
-    x: [gdp_list[idx_selected_country]], 
-    y: [bigmac_price_list[idx_selected_country]],
-    mode: "markers", 
+    x: [gdp_list[selected_country_index]],
+    y: [bigmac_price_list[selected_country_index]],
+    mode: "markers",
     type: "scatter",
     name: "Selected Country",
     textposition: 'top center',
     textfont: {
-      family:  'Raleway, sans-serif'
+      family: 'Raleway, sans-serif'
     },
-    marker: { 
+    marker: {
       size: 14,
       color: "rgb(240,0,0)"
     }
   }
   var data = [trace1, trace2, trace3];
-  
+
   var layout = {
     title: 'GDP vs Price',
     xaxis: {
