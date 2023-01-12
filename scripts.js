@@ -140,7 +140,10 @@ async function draw() {
     textfont: {
       family: 'Raleway, sans-serif'
     },
-    marker: { size: 13 }
+    marker: { 
+      size: 13,
+      color: "rgb(31, 119, 180)"
+    }
   };
 
   var trace2 = {
@@ -184,7 +187,7 @@ async function draw() {
       color: "rgb(240,0,0)"
     }
   }
-  var data = [trace1, trace2, trace3, trace4];
+  var data = [trace2, trace1, trace3, trace4];
 
   var layout = {
     title: 'GDP vs Price',
