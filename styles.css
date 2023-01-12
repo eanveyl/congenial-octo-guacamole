@@ -43,6 +43,20 @@ p {
   align-items: center;
 }
 
-select {
-  width: 150px;
+#selected_country_name{
+  color: #fe1717;
+  font-weight: 700;
 }
+
+select {
+  width: 350px;
+  font-size: 27px; 
+  line-height: 27px; 
+  padding: 12px; 
+  border-radius: 5px;  
+}
+select:hover {
+  background: #ffd86c; }
+  .myButton:active {
+  background: #144E75; }
+
