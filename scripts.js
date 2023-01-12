@@ -29,9 +29,9 @@ function linearRegression(inputArray, xLabel, yLabel) {
 function generateDescriptionText(gdp_list, country_list, bigmac_price_list, country_names_list) {
   var descriptions = new Array();
   const lin_reg_array = new Array();
-
-  for (let i = 0; i < gdp_list.length; i++) {
-    lin_reg_array.push({ "GDP": gdp_list[i], "Price": bigmac_price_list[i] });
+  
+  for (let i=0; i<gdp_list.length; i++) {
+    lin_reg_array.push({"GDP": gdp_list[i], "Price": bigmac_price_list[i]});
   }
   const linReg = linearRegression(lin_reg_array, "GDP", "Price");
 
@@ -54,6 +54,19 @@ function generateDescriptionText(gdp_list, country_list, bigmac_price_list, coun
     descriptions.push(description);
   }
 
+  return descriptions
+}
+
+function generateMapText(bigmac_price_local, currency_code) {
+  var descriptions = new Array();
+
+  for (let i=0; i<bigmac_price_local.length; i++) {
+    var p = bigmac_price_local[i].toFixed(1);
+    var description = "Price in Local Currency: " + p + " " +currency_code[i];
+
+    descriptions.push(description);
+  }
+  
   return descriptions
 }
 
@@ -83,7 +96,7 @@ async function draw() {
     locationmode: "country names",
     locations: country_names_list,
     z: bigmac_price_list_normalized,
-    text: bigmac_price_list_normalized,
+    text: generateMapText(bigmac_price_local, currency_code),
     autocolorscale: true
   }];
 
@@ -127,10 +140,27 @@ async function draw() {
     textfont: {
       family: 'Raleway, sans-serif'
     },
-    marker: { size: 10 }
+    marker: { size: 13 }
   };
 
   var trace2 = {
+    x: gdp_list,
+    y: bigmac_price_list,
+    mode: 'markers+text',
+    type: 'scatter',
+    name: 'Countries',
+    text: country_list,
+    textposition: 'top center',
+    textfont: {
+      family: 'Raleway, sans-serif'
+    },
+    marker: { 
+      size: 13,
+      color: "rgb(31, 119, 180)"
+    }
+  };
+
+  var trace3 = {
     x: [min_gdp, max_gdp],
     y: linreg_vals,
     mode: "lines+markers",
@@ -139,7 +169,7 @@ async function draw() {
     line: { shape: "linear" }
   }
 
-  var trace3 = {
+  var trace4 = {
     x: [gdp_list[selected_country_index]],
     y: [bigmac_price_list[selected_country_index]],
     mode: "markers",
@@ -154,7 +184,7 @@ async function draw() {
       color: "rgb(240,0,0)"
     }
   }
-  var data = [trace1, trace2, trace3];
+  var data = [trace1, trace2, trace3, trace4];
 
   var layout = {
     title: 'GDP vs Price',
@@ -163,7 +193,9 @@ async function draw() {
     },
     yaxis: {
       title: "BigMac Price [USD]"
-    }
+    },
+    height: 700,
+    showlegend: false
   };
 
   Plotly.newPlot('scatter_plot', data, layout);
