@@ -57,41 +57,38 @@ function generateDescriptionText(gdp_list, country_list, bigmac_price_list, coun
   return descriptions
 }
 
+var dataset;
+const dropdown = document.getElementById("dropdown");
+const gdp_list = new Array();
+const country_list = new Array();
+const bigmac_price_list = new Array();
+const bigmac_price_local = new Array();
+const dollar_ex = new Array();
+const currency_code = new Array();
+const country_names_list = new Array();
+var selected_country;
+var selected_country_index;
+var bigmac_price_list_normalized;
 
-d3.csv("clean_data_euromod.csv").then( function(data) {
-  const selected_country = "Taiwan";
-  console.log(data)
+d3.csv("clean_data_euromod.csv", (d) => {
+  dataset = d;
+  start();
+});
 
-  midyear_data = data.slice(57, 129);  // TODO this is not the most flexible way to fetch the data
-
-  const gdp_list = new Array();
-  const country_list = new Array();
-  const bigmac_price_list = new Array();
-  const country_names_list = new Array();
-
-  for (let i=0; i<midyear_data.length; i++){
-    gdp_list.push(parseFloat(midyear_data[i]["GDP_dollar"]))
-    country_list.push(midyear_data[i]["iso_a3"])
-    bigmac_price_list.push(parseFloat(midyear_data[i]["dollar_price"]))
-    country_names_list.push(midyear_data[i]["name"])
-  }
-
-  const isLargeNumber = (element) => element === selected_country;
-  const idx_selected_country = country_names_list.findIndex(isLargeNumber);  // Save the index of the selected country for the scatter plot
-
+async function draw() {
   // World Map
   // Inspiration from https://plotly.com/javascript/choropleth-maps/
   var data = [{
-    type: "choropleth", 
-    locationmode: "country names", 
+    type: "choropleth",
+    locationmode: "country names",
     locations: country_names_list,
-    z: bigmac_price_list,
-    text: bigmac_price_list,
+    z: bigmac_price_list_normalized,
+    text: bigmac_price_list_normalized,
     autocolorscale: true
   }];
 
   var layout = {
-    title: "BigMac Price in USD",
+    title: "BigMac Price in " + currency_code[selected_country_index],
     geo: {
       projection: {
         type: "robinson"
@@ -100,14 +97,14 @@ d3.csv("clean_data_euromod.csv").then( function(data) {
     height: 700
   };
 
-  Plotly.newPlot("world_map", data, layout, {showLink: false});
+  Plotly.newPlot("world_map", data, layout, { showLink: false });
 
   // Scatter Plot
   // Inspiration from https://plotly.com/javascript/line-and-scatter/
   lin_reg_array = new Array();
-  
-  for (let i=0; i<gdp_list.length; i++) {
-    lin_reg_array.push({"GDP": gdp_list[i], "Price": bigmac_price_list[i]})
+
+  for (let i = 0; i < gdp_list.length; i++) {
+    lin_reg_array.push({ "GDP": gdp_list[i], "Price": bigmac_price_list[i] })
   }
 
   const linReg = linearRegression(lin_reg_array, "GDP", "Price")  // This is a function handle that takes a GDP value and returns the expected linear regression of the price in USD
@@ -128,18 +125,18 @@ d3.csv("clean_data_euromod.csv").then( function(data) {
     text: generateDescriptionText(gdp_list, country_list, bigmac_price_list, country_names_list),
     textposition: 'top center',
     textfont: {
-      family:  'Raleway, sans-serif'
+      family: 'Raleway, sans-serif'
     },
     marker: { size: 10 }
   };
-  
+
   var trace2 = {
     x: [min_gdp, max_gdp],
     y: linreg_vals,
     mode: "lines+markers",
     type: "scatter",
     name: "Linear Regression",
-    line: {shape: "linear"}
+    line: { shape: "linear" }
   }
 
   var trace3 = {
@@ -160,7 +157,7 @@ d3.csv("clean_data_euromod.csv").then( function(data) {
   var data = [trace1, trace2, trace3];
   
   var layout = {
-    title:'GDP vs Price',
+    title: 'GDP vs Price',
     xaxis: {
       title: "2022 GDP for Countries [USD]"
     },
@@ -168,7 +165,52 @@ d3.csv("clean_data_euromod.csv").then( function(data) {
       title: "BigMac Price [USD]"
     }
   };
-  
+
   Plotly.newPlot('scatter_plot', data, layout);
-  
-})
+}
+
+async function start() {
+
+  midyear_data = dataset.slice(57, 129);
+
+  for (let i = 0; i < midyear_data.length; i++) {
+    gdp_list.push(parseFloat(midyear_data[i]["GDP_dollar"]));
+    country_list.push(midyear_data[i]["iso_a3"]);
+    bigmac_price_list.push(parseFloat(midyear_data[i]["dollar_price"]));
+    bigmac_price_local.push(parseFloat(midyear_data[i]["local_price"]));
+    currency_code.push(midyear_data[i]["currency_code"]);
+    dollar_ex.push(parseFloat(midyear_data[i]["dollar_ex"]));
+    country_names_list.push(midyear_data[i]["name"]);
+  }
+
+  country_names_list.forEach((country) => {
+    var opt = document.createElement('option');
+    opt.value = country;
+    opt.innerHTML = country;
+    dropdown.appendChild(opt);
+  });
+
+  selected_country = country_names_list[0];
+
+  // TODO simplify this
+  const selected_country_name_html = document.getElementById("selected_country_name");
+  const selected_country_price_html = document.getElementById("selected_country_price");
+  selected_country_index = country_names_list.indexOf(selected_country);
+  selected_country_name_html.innerHTML = selected_country;
+  selected_country_price_html.innerHTML = bigmac_price_local[selected_country_index] + " " + currency_code[selected_country_index];
+  bigmac_price_list_normalized = bigmac_price_list.map((price) => price * dollar_ex[selected_country_index]);
+
+  dropdown.addEventListener("change", () => {
+    selected_country = dropdown.value;
+    const selected_country_name_html = document.getElementById("selected_country_name");
+    const selected_country_price_html = document.getElementById("selected_country_price");
+    selected_country_index = country_names_list.indexOf(selected_country);
+    selected_country_name_html.innerHTML = selected_country;
+    selected_country_price_html.innerHTML = bigmac_price_local[selected_country_index] + " " + currency_code[selected_country_index];
+    bigmac_price_list_normalized = bigmac_price_list.map((price) => price * dollar_ex[selected_country_index]);
+    draw();
+  }
+  );
+
+  draw();
+}
