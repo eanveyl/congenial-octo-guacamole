@@ -26,11 +26,43 @@ function linearRegression(inputArray, xLabel, yLabel) {
   return (x) => intercept + slope * x;
 }
 
+function generateDescriptionText(gdp_list, country_list, bigmac_price_list, country_names_list) {
+  var descriptions = new Array();
+  const lin_reg_array = new Array();
+  
+  for (let i=0; i<gdp_list.length; i++) {
+    lin_reg_array.push({"GDP": gdp_list[i], "Price": bigmac_price_list[i]});
+  }
+  const linReg = linearRegression(lin_reg_array, "GDP", "Price");
+
+  for (let i=0; i<country_list.length; i++) {
+    expected_price = linReg(gdp_list[i]);
+    var rel_cost = (bigmac_price_list[i]/expected_price -1) * 100 ;  // In order to know i.e. 60% more expensive than other similar countries
+    var rel_cost = rel_cost.toFixed(1)  // Round to the nearest tenth
+    var s = String();
+    
+    if (expected_price < bigmac_price_list[i]) {
+      s = rel_cost + "% more expensive.";
+    } else {
+      s = rel_cost + "% less expensive.";
+    }
+
+
+    var description = "Selected Country: " + country_names_list[i] + 
+    ". Compared to other countries \nwith similar GDP, goods are\n" + s
+
+    descriptions.push(description);
+  }
+  
+  return descriptions
+}
+
 
 d3.csv("clean_data_euromod.csv").then( function(data) {
+  const selected_country = "Taiwan";
   console.log(data)
 
-  midyear_data = data.slice(57, 129)  // TODO this is not the most flexible way to fetch the data
+  midyear_data = data.slice(57, 129);  // TODO this is not the most flexible way to fetch the data
 
   const gdp_list = new Array();
   const country_list = new Array();
@@ -43,6 +75,9 @@ d3.csv("clean_data_euromod.csv").then( function(data) {
     bigmac_price_list.push(parseFloat(midyear_data[i]["dollar_price"]))
     country_names_list.push(midyear_data[i]["name"])
   }
+
+  const isLargeNumber = (element) => element === selected_country;
+  const idx_selected_country = country_names_list.findIndex(isLargeNumber);  // Save the index of the selected country for the scatter plot
 
   // World Map
   // Inspiration from https://plotly.com/javascript/choropleth-maps/
@@ -86,15 +121,15 @@ d3.csv("clean_data_euromod.csv").then( function(data) {
   var trace1 = {
     x: gdp_list,
     y: bigmac_price_list,
-    mode: 'markers+text',
+    mode: 'markers',
     type: 'scatter',
     name: 'Countries',
-    text: country_list,
+    text: generateDescriptionText(gdp_list, country_list, bigmac_price_list, country_names_list),
     textposition: 'top center',
     textfont: {
       family:  'Raleway, sans-serif'
     },
-    marker: { size: 8 }
+    marker: { size: 10 }
   };
   
   var trace2 = {
@@ -105,7 +140,23 @@ d3.csv("clean_data_euromod.csv").then( function(data) {
     name: "Linear Regression",
     line: {shape: "linear"}
   }
-  var data = [trace1, trace2];
+
+  var trace3 = {
+    x: [gdp_list[idx_selected_country]], 
+    y: [bigmac_price_list[idx_selected_country]],
+    mode: "markers", 
+    type: "scatter",
+    name: "Selected Country",
+    textposition: 'top center',
+    textfont: {
+      family:  'Raleway, sans-serif'
+    },
+    marker: { 
+      size: 14,
+      color: "rgb(240,0,0)"
+    }
+  }
+  var data = [trace1, trace2, trace3];
   
   var layout = {
     title:'GDP vs Price',
