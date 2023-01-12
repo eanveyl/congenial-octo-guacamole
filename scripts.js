@@ -27,6 +27,8 @@ function linearRegression(inputArray, xLabel, yLabel) {
 }
 
 var dataset;
+const dropdown = document.getElementById("dropdown");
+var selected_country;
 
 d3.csv("clean_data_euromod.csv", (d) => {
   dataset = d;
@@ -49,28 +51,24 @@ async function start() {
     country_names_list.push(midyear_data[i]["name"])
   }
 
-  // Dropdown button to choose country and display Big Mac price
+  country_names_list.forEach((country) => {
+    var opt = document.createElement('option');
+    opt.value = country;
+    opt.innerHTML = country;
+    dropdown.appendChild(opt);
+  });
 
-  
-  
-    var select = d3.select("#dropdown").append("div").append("select")
+  selected_country = country_names_list[0];
+  const selected_country_name_html = document.getElementById("selected_country_name");
+  const selected_country_price_html = document.getElementById("selected_country_price");
 
-    select.on("change", function(d) {
-        var value = d3.select(this).property("value");
-        alert(value);
-      });
+  selected_country_name_html.innerHTML = selected_country;
+  selected_country_price_html.innerHTML = bigmac_price_list[country_names_list.indexOf(selected_country)];
 
-    select.selectAll("option")
-      .data(data)
-      .enter()
-      .append("option")
-      .attr("value", function (d) { return d.dollar_price; })
-      .text(function (d) { return d.name; });
-
-    
-  
-    const selectedText = d3.select('#dropdown option:checked').text();
-    document.getElementById("output").innerHTML = selectedText
+  dropdown.addEventListener("change", () => {
+    selected_country = dropdown.value;
+  }
+  );
 
   // World Map
   // Inspiration from https://plotly.com/javascript/choropleth-maps/

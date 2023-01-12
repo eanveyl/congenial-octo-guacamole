@@ -8,41 +8,56 @@
   <script src="https://unpkg.com/d3@7/dist/d3.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-2.17.1.min.js"></script>
 
-<style>
-    h1{
-        text-align: center;
-        display :flex;
-        justify-content: center;
-        font-family: Verdana, Geneva, sans-serif;
-        font-size: 40px;
-        word-spacing: 2px;
-        color: #000000;}
-    h2{
-        display :flex;
-        text-align: center;
-        justify-content: center;
-        font-family: Verdana, Geneva, sans-serif;
-        font-size: 30px;
-        word-spacing: 2px;
-        color: #000000;}
-
-    body{background-color: #FFFFFF;}
-
-    #headline{
-        display :flex;
-        justify-content: center;
+  <style>
+    h1 {
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      font-family: Verdana, Geneva, sans-serif;
+      font-size: 40px;
+      word-spacing: 2px;
+      color: #000000;
     }
 
-    p{
-        text-align: center;
-        justify-content: center;
-        font-family: Verdana, Geneva, sans-serif;
-        font-size: 22px;
-        word-spacing: 2px;
-        color: #000000;
-        margin : 30px, 50px, 30px, 50px;
+    h2 {
+      display: flex;
+      text-align: center;
+      justify-content: center;
+      font-family: Verdana, Geneva, sans-serif;
+      font-size: 30px;
+      word-spacing: 2px;
+      color: #000000;
     }
-</style>
+
+    body {
+      background-color: #FFFFFF;
+    }
+
+    #headline {
+      display: flex;
+      justify-content: center;
+    }
+
+    p {
+      text-align: center;
+      justify-content: center;
+      font-family: Verdana, Geneva, sans-serif;
+      font-size: 22px;
+      word-spacing: 2px;
+      color: #000000;
+      margin: 30px, 50px, 30px, 50px;
+    }
+
+    #choose_country {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    select {
+      width: 150px;
+    }
+  </style>
 
 </head>
 
@@ -50,22 +65,23 @@
 <h2>What does the price of a big mac say about your country?
 </h2>
 
-<div id="headline"><p>The big mac index is a theory that originated from a study by The Economist. 
-    Its aim was to measure the purchasing power parity (PPP) in a visual and informal way.Enter the name 
+<div id="headline">
+  <p>The big mac index is a theory that originated from a study by The Economist.
+    Its aim was to measure the purchasing power parity (PPP) in a visual and informal way.Enter the name
     of your country and see how much costs a big mac. </p>
 </div>
 
 <!-- Create a div where the graph will take place -->
 <div id="choose_country">
-    <p>Pick your country</p>
-    <div id ="dropdown">
-    </div>
-    <div id = "response">
-        <p>The price of a Big Mac in</p><p id="picked_country"></p><p>is :</p>
-    </div>
-    <div id = "output">
-        <p id = "price"></p>
-    </div>
+  <p>Pick your country</p>
+  <select id="dropdown">
+  </select>
+</div>
+<div id="response">
+  <p>The price of a Big Mac in <span id="selected_country_name"></span> </p>
+  <p id="picked_country"></p>
+  <p>is: <span id="selected_country_price"></span></p>
+</div>
 </div>
 
 
