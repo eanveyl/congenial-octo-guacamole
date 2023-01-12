@@ -49,14 +49,17 @@ p {
 }
 
 select {
-  width: 350px;
-  font-size: 27px; 
-  line-height: 27px; 
+  width: 250px;
+  font-size: 22px; 
+  line-height: 22px; 
   padding: 12px; 
-  border-radius: 5px;  
+  border-radius: 5px; 
+  text-align: center; 
 }
 select:hover {
-  background: #ffd86c; }
-  .myButton:active {
-  background: #144E75; }
+  background: #ffe9ac; }
+
+#selected_country_price{
+  font-size: 32px;
+}
 
