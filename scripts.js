@@ -96,7 +96,8 @@ d3.csv("clean_data_euromod.csv").then( function(data) {
       projection: {
         type: "robinson"
       }
-    }
+    }, 
+    height: 700
   };
 
   Plotly.newPlot("world_map", data, layout, {showLink: false});
