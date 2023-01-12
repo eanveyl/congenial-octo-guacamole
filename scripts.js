@@ -1,3 +1,4 @@
+
 d3.csv("clean_data.csv").then( function(data) {
   console.log(data)
 
@@ -14,6 +15,29 @@ d3.csv("clean_data.csv").then( function(data) {
     bigmac_price_list.push(midyear_data[i]["dollar_price"])
     country_names_list.push(midyear_data[i]["name"])
   }
+
+  // Dropdown button to choose country and display Big Mac price
+
+  
+  
+    var select = d3.select("#dropdown").append("div").append("select")
+
+    select.on("change", function(d) {
+        var value = d3.select(this).property("value");
+        alert(value);
+      });
+
+    select.selectAll("option")
+      .data(data)
+      .enter()
+      .append("option")
+      .attr("value", function (d) { return d.dollar_price; })
+      .text(function (d) { return d.name; });
+
+    
+  
+    const selectedText = d3.select('#dropdown option:checked').text();
+    document.getElementById("output").innerHTML = selectedText
 
   // World Map
   var data = [{

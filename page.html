@@ -6,15 +6,62 @@
 <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
 
 <style>
-    h1{text-align: center;}
-    h2{text-align: center;}
-    body{background-color: #bf1627;}
+    h1{
+        text-align: center;
+        display :flex;
+        justify-content: center;
+        font-family: Verdana, Geneva, sans-serif;
+        font-size: 40px;
+        word-spacing: 2px;
+        color: #000000;}
+    h2{
+        display :flex;
+        text-align: center;
+        justify-content: center;
+        font-family: Verdana, Geneva, sans-serif;
+        font-size: 30px;
+        word-spacing: 2px;
+        color: #000000;}
+
+    body{background-color: #fff0b4;}
+
+    #headline{
+        display :flex;
+        justify-content: center;
+    }
+
+    p{
+        text-align: center;
+        justify-content: center;
+        font-family: Verdana, Geneva, sans-serif;
+        font-size: 22px;
+        word-spacing: 2px;
+        color: #000000;
+        margin : 30px, 50px, 30px, 50px;
+    }
 </style>
 
-<h1>Data Visualization - Final Project</h1>
-<h2>Some header and subtitle</h2>
+<h1>The Big Mac Index</h1>
+<h2>What does the price of a big mac say about your country?
+</h2>
+
+<div id="headline"><p>The big mac index is a theory that originated from a study by The Economist. 
+    Its aim was to measure the purchasing power parity (PPP) in a visual and informal way.Enter the name 
+    of your country and see how much costs a big mac. </p>
+</div>
 
 <!-- Create a div where the graph will take place -->
+<div id="choose_country">
+    <p>Pick your country</p>
+    <div id ="dropdown">
+    </div>
+    <div id = "response">
+        <p>The price of a Big Mac in</p><p id="picked_country"></p><p>is :</p>
+    </div>
+    <div id = "output">
+        <p id = "price"></p>
+    </div>
+</div>
 <div id="world_map" style="width:1000px; margin:0 auto;"></div>
 <div id="scatter_plot" style="width:1000px; margin:0 auto;"></div>
 
