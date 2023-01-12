@@ -27,10 +27,10 @@ function linearRegression(inputArray, xLabel, yLabel) {
 }
 
 
-d3.csv("clean_data.csv").then( function(data) {
+d3.csv("clean_data_euromod.csv").then( function(data) {
   console.log(data)
 
-  midyear_data = data.slice(57, 111)
+  midyear_data = data.slice(57, 129)  // TODO this is not the most flexible way to fetch the data
 
   const gdp_list = new Array();
   const country_list = new Array();
