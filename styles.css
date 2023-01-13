@@ -3,7 +3,7 @@ h1 {
   display: flex;
   justify-content: center;
   font-family: Verdana, Geneva, sans-serif;
-  font-size: 40px;
+  font-size: 36px;
   word-spacing: 2px;
   color: #000000;
 }
@@ -13,13 +13,14 @@ h2 {
   text-align: center;
   justify-content: center;
   font-family: Verdana, Geneva, sans-serif;
-  font-size: 30px;
+  font-size: 28px;
   word-spacing: 2px;
   color: #000000;
 }
 
 body {
   background-color: #FFFFFF;
+  margin: 0 10% 0 10%;
 }
 
 #headline {
@@ -31,7 +32,7 @@ p {
   text-align: center;
   justify-content: center;
   font-family: Verdana, Geneva, sans-serif;
-  font-size: 22px;
+  font-size: 18px;
   word-spacing: 2px;
   color: #000000;
   margin: 30px, 50px, 30px, 50px;
