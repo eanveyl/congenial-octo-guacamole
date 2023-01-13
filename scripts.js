@@ -29,9 +29,9 @@ function linearRegression(inputArray, xLabel, yLabel) {
 function generateDescriptionText(gdp_list, country_list, bigmac_price_list, country_names_list) {
   var descriptions = new Array();
   const lin_reg_array = new Array();
-  
-  for (let i=0; i<gdp_list.length; i++) {
-    lin_reg_array.push({"GDP": gdp_list[i], "Price": bigmac_price_list[i]});
+
+  for (let i = 0; i < gdp_list.length; i++) {
+    lin_reg_array.push({ "GDP": gdp_list[i], "Price": bigmac_price_list[i] });
   }
   const linReg = linearRegression(lin_reg_array, "GDP", "Price");
 
@@ -48,8 +48,8 @@ function generateDescriptionText(gdp_list, country_list, bigmac_price_list, coun
     }
 
 
-    var description = "Selected Country: " + country_names_list[i] +
-      ". Compared to other countries \nwith similar GDP, goods are\n" + s
+    var description = country_names_list[i] +
+      ". Goods are " + s
 
     descriptions.push(description);
   }
@@ -60,13 +60,13 @@ function generateDescriptionText(gdp_list, country_list, bigmac_price_list, coun
 function generateMapText(bigmac_price_local, currency_code) {
   var descriptions = new Array();
 
-  for (let i=0; i<bigmac_price_local.length; i++) {
+  for (let i = 0; i < bigmac_price_local.length; i++) {
     var p = bigmac_price_local[i].toFixed(1);
-    var description = "Price in Local Currency: " + p + " " +currency_code[i];
+    var description = "Local Price: " + p + " " + currency_code[i];
 
     descriptions.push(description);
   }
-  
+
   return descriptions
 }
 
@@ -140,7 +140,7 @@ async function draw() {
     textfont: {
       family: 'Raleway, sans-serif'
     },
-    marker: { 
+    marker: {
       size: 13,
       color: "rgb(31, 119, 180)"
     }
@@ -157,7 +157,7 @@ async function draw() {
     textfont: {
       family: 'Raleway, sans-serif'
     },
-    marker: { 
+    marker: {
       size: 13,
       color: "rgb(31, 119, 180)"
     }

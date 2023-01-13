@@ -46,12 +46,12 @@ p {
 
 #selected_country_name{
   color: #fe1717;
-  font-weight: 700;
+  font-size: 24px;
 }
 
 select {
-  width: 250px;
-  font-size: 22px; 
+  width: 200px;
+  font-size: 18px; 
   line-height: 22px; 
   padding: 12px; 
   border-radius: 5px; 
@@ -61,6 +61,7 @@ select:hover {
   background: #ffe9ac; }
 
 #selected_country_price{
+  color: #fe1717;
   font-size: 32px;
 }
 
